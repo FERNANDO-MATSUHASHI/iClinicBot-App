@@ -1,0 +1,7 @@
+{
+  "name": "iClinicBot",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
