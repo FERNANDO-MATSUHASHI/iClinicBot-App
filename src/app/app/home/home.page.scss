@@ -1,0 +1,20 @@
+.highlight {
+  font-weight: bold;
+  font-size: 1.2em; /* Aumente conforme necessário */
+}
+
+.time {
+  font-weight: bold;
+  font-size: 1.2em; /* Aumente conforme necessário */
+}
+
+/* Define o fundo verde apenas para o item 'Em Andamento' */
+.andamento {
+  --background: #d1f7d1; /* Fundo verde claro */
+}
+
+/* Se necessário, personalize ainda mais a cor dos botões */
+ion-item-option {
+  --background: transparent; /* Impede que a cor de fundo afete os botões */
+}
+

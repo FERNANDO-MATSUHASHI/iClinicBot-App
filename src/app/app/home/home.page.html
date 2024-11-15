@@ -1,0 +1,77 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title> Agenda - {{ todayDate | date: 'dd/MM/yyyy' }} </ion-title>
+
+    <!-- Botão de Logout -->
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <img src="assets/icon/logout.svg" alt="Logout" style="width: 24px; height: 24px;" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="filteredAgenda.length > 0; else emptyList">
+    <ion-item-sliding #slidingItem *ngFor="let item of filteredAgenda">
+      <!-- Aplica a classe 'andamento' somente no item -->
+      <ion-item [ngClass]="{'andamento': item.status === 'Andamento'}">
+        <ion-label>
+          <h2 class="highlight">
+            {{ item.nome }}
+            <span class="time"
+              >{{ item.dataAgendaChatBot | date: 'HH:mm' }}</span
+            >
+          </h2>
+          <p><strong>Celular:</strong> {{ item.cel }}</p>
+          <p><strong>Especialidade:</strong> {{ item.especialidade }}</p>
+          <p><strong>Forma de Pagamento:</strong> {{ item.formaPagamento }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-options side="start">
+        <ion-item-option
+          color="success"
+          (click)="andamentoAgenda(item, slidingItem)"
+          *ngIf="item.status !== 'Andamento'"
+        >
+          Em andamento
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item-options [id]="'present-alert-' + item.idAgendaChatBot" side="end">
+        <ion-item-option
+          *ngIf="item.status === 'Andamento'"
+          color="danger"
+        >
+          Concluído
+        </ion-item-option>
+
+        <ion-item-option
+          *ngIf="item.status === 'Concluído'"
+          color="danger"
+          disabled
+        >
+          Concluído
+        </ion-item-option>
+
+        <ion-alert
+          [trigger]="'present-alert-' + item.idAgendaChatBot"
+          header="Confirmar?"
+          message="Deseja realmente concluir esta consulta?"
+          [buttons]="getAlertButtons(item, slidingItem)"
+          (didDismiss)="setResult()"
+        ></ion-alert>
+
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Mensagem para lista vazia -->
+  <ng-template #emptyList>
+    <ion-item>
+      <ion-label>Nenhuma agenda encontrada para hoje.</ion-label>
+    </ion-item>
+  </ng-template>
+</ion-content>
