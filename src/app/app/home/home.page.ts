@@ -37,7 +37,6 @@ import { FormsModule } from '@angular/forms';
     IonTitle,
     IonToolbar,
     IonHeader,
-    IonIcon,
     IonButton,
     IonItem,
     IonLabel,
