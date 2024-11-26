@@ -51,6 +51,20 @@ export class HomePage {
             const token = response;
             localStorage.setItem('authToken', token);
             localStorage.setItem('userEmail', email);
+            const userEmail = localStorage.getItem('userEmail');
+            const authToken = localStorage.getItem('authToken');
+
+            if (userEmail != null && authToken != null) {
+              this.clientServices.getMedicoEmail(userEmail, authToken).subscribe({
+                next: (data) => {
+                  localStorage.setItem('idCadastro', data.idCadastro);
+                },
+                error: (err) => {
+                  console.error('Erro ao carregar dados:', err);
+                },
+              });
+            }
+
             this.navCtrl.navigateForward('home');
           }
         },

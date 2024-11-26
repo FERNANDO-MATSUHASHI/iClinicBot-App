@@ -9,7 +9,6 @@ import {
   IonLabel,
   IonItem,
   IonButton,
-  IonIcon,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -64,9 +63,11 @@ export class HomePage implements OnInit {
         item.dataAgendaChatBot.startsWith(this.todayDate.toISOString().split('T')[0])
       );
     });
+    const idCadastro = Number(localStorage.getItem('idCadastro') ?? 0);
 
-    // Carrega a agenda do médico (ID fictício 1 - substitua pelo ID real)
-    this.loadAgenda(1);  // Chama o método para carregar a agenda
+    if (idCadastro != null) {
+      this.loadAgenda(idCadastro);
+    }
   }
 
   getAlertButtons(item: any, slidingItem: any) {
