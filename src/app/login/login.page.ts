@@ -58,6 +58,8 @@ export class HomePage {
               this.clientServices.getMedicoEmail(userEmail, authToken).subscribe({
                 next: (data) => {
                   localStorage.setItem('idCadastro', data.idCadastro);
+                  localStorage.setItem('nome', data.nomeCompleto);
+                  console.log(data.nomeCompleto);
                 },
                 error: (err) => {
                   console.error('Erro ao carregar dados:', err);

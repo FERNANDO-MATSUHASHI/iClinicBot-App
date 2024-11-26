@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { AgendaService } from '../../service/agenda.service';  // Importa o serviço de agenda
 import { AgendaItem } from '../../models/agenda-item.model';  // Importa o modelo de item de agenda
 import { ClientService } from '../../service/client.service';  // Serviço para comunicação com a API do cliente
@@ -45,9 +45,10 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
   ]
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, DoCheck {
   filteredAgenda: AgendaItem[] = [];  // Lista filtrada da agenda para exibição
   todayDate: Date = new Date();  // Data de hoje para filtrar agendamentos
+  nome: string = '';  // Nome do usuário
 
   constructor(
     private agendaService: AgendaService,  // Serviço que mantém o estado da agenda
@@ -56,6 +57,8 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.updateNome(); // Atualiza o nome ao inicializar o componente
+
     // Inscreve-se no Observable do serviço de agenda
     this.agendaService.agenda$.subscribe((agenda) => {
       // Filtra a agenda para exibir apenas os agendamentos de hoje
@@ -63,10 +66,23 @@ export class HomePage implements OnInit {
         item.dataAgendaChatBot.startsWith(this.todayDate.toISOString().split('T')[0])
       );
     });
+
     const idCadastro = Number(localStorage.getItem('idCadastro') ?? 0);
 
     if (idCadastro != null) {
       this.loadAgenda(idCadastro);
+    }
+  }
+
+  // Verifica se o nome foi alterado no localStorage
+  ngDoCheck() {
+    this.updateNome();
+  }
+
+  updateNome() {
+    const storedNome = localStorage.getItem('nome');
+    if (storedNome && storedNome !== this.nome) {
+      this.nome = storedNome;  // Atualiza o nome se ele for diferente
     }
   }
 
@@ -89,6 +105,7 @@ export class HomePage implements OnInit {
   }
 
   loadAgenda(medicoId: number) {
+    console.log('Dados-> ', medicoId);
     // Chama o serviço para carregar a agenda do médico
     this.clientService.getAgendaChatBotById(medicoId).subscribe({
       next: (data) => {
@@ -144,6 +161,8 @@ export class HomePage implements OnInit {
 
   // Método de logout
   logout() {
-    this.navCtrl.navigateRoot('/');  // Navega para a página inicial (login)
+    this.updateNome(); // Atualizar nome
+
+    this.navCtrl.navigateRoot('/');  // Navegar para a página inicial (login)
   }
 }
